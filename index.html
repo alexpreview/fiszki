@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fiszki - Nauka języka polskiego</title>
+<style>
+:root{--bg:#f5f6fa;--card:#fff;--primary:#d62828;--primary-dk:#a51c1c;--secondary:#f7f3e3;--accent:#2b4590;--text:#1a1a2e;--muted:#6b7280;--border:#e5e7eb;--sh:0 4px 24px rgba(0,0,0,.10);--sh2:0 8px 32px rgba(0,0,0,.16);--r:16px}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
+.header{background:linear-gradient(135deg,var(--primary),var(--primary-dk));color:#fff;padding:16px 20px;display:flex;align-items:center;gap:12px;box-shadow:0 2px 12px rgba(214,40,40,.3)}
+.header h1{font-size:19px;font-weight:700}
+.back-btn{margin-left:auto;background:rgba(255,255,255,.2);border:none;color:#fff;padding:8px 14px;border-radius:8px;cursor:pointer;font-size:13px;font-weight:600;display:none;white-space:nowrap}
+.back-btn.vis{display:block}
+.screen{display:none;padding:20px 18px;max-width:640px;margin:0 auto}
+.screen.active{display:block}
+.home-title{font-size:20px;font-weight:700;margin-bottom:5px}
+.home-sub{color:var(--muted);font-size:13px;margin-bottom:16px}
+.topic-card{background:var(--card);border-radius:var(--r);padding:14px 16px;box-shadow:var(--sh);cursor:pointer;border:2px solid transparent;transition:border-color .15s,box-shadow .15s,transform .12s;display:flex;align-items:center;gap:12px;user-select:none}
+.topic-card:hover{border-color:var(--primary);box-shadow:var(--sh2);transform:translateY(-2px)}
+.topic-card:active{transform:translateY(0);opacity:.9}
+.topic-icon{font-size:26px;flex-shrink:0}
+.topic-name{font-size:14px;font-weight:700;margin-bottom:2px}
+.topic-count{font-size:11px;color:var(--muted)}
+.topic-arrow{margin-left:auto;font-size:17px;color:var(--muted)}
+.topic-header{margin-bottom:18px}
+.topic-header h2{font-size:17px;font-weight:700;margin-bottom:5px}
+.progress-wrap{display:flex;align-items:center;gap:8px;margin-top:7px}
+.progress-bar{flex:1;height:5px;background:var(--border);border-radius:99px;overflow:hidden}
+.progress-fill{height:100%;background:var(--primary);border-radius:99px;transition:width .35s ease;width:0%}
+.progress-text{font-size:12px;color:var(--muted);white-space:nowrap}
+.card-area{min-height:200px;display:flex;align-items:center;justify-content:center;margin-bottom:18px}
+.start-hint{text-align:center;color:var(--muted)}
+.hint-icon{font-size:38px;margin-bottom:9px}
+.start-hint p{font-size:13px}
+.flip-card{width:100%;min-height:180px;perspective:1200px;cursor:pointer}
+.flip-inner{position:relative;width:100%;min-height:180px;transform-style:preserve-3d;transition:transform .5s cubic-bezier(.4,0,.2,1)}
+.flip-card.flipped .flip-inner{transform:rotateY(180deg)}
+.flip-front,.flip-back{position:absolute;width:100%;min-height:180px;backface-visibility:hidden;-webkit-backface-visibility:hidden;border-radius:var(--r);padding:20px;display:flex;flex-direction:column;align-items:center;justify-content:center;box-shadow:var(--sh);text-align:center}
+.flip-front{background:var(--accent);color:#fff}
+.flip-back{background:var(--secondary);color:var(--text);transform:rotateY(180deg)}
+.card-label{font-size:10px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;opacity:.65;margin-bottom:10px}
+.card-text{font-size:15px;font-weight:600;line-height:1.55}
+.tap-hint{margin-top:12px;font-size:11px;opacity:.5}
+.btn{display:block;width:100%;border:none;border-radius:12px;padding:13px;font-size:15px;font-weight:700;cursor:pointer;transition:background .15s,transform .1s;text-align:center;background:var(--primary);color:#fff}
+.btn:hover{background:var(--primary-dk);transform:translateY(-1px)}
+.btn:active{transform:translateY(0)}
+.finished{text-align:center;padding:22px 14px;background:var(--card);border-radius:var(--r);box-shadow:var(--sh);margin-bottom:18px}
+.finished .fi{font-size:40px;margin-bottom:10px}
+.finished h3{font-size:17px;font-weight:700;margin-bottom:6px}
+.finished p{color:var(--muted);font-size:13px}
+</style>
+</head>
+<body>
+<div class="header">
+  <div style="font-size:22px">&#127477;&#127473;</div>
+  <h1 id="htitle">Fiszki &mdash; j&#281;zyk polski</h1>
+  <button class="back-btn" id="backBtn">&#8592; Wr&oacute;&cacute;</button>
+</div>
+
+<div class="screen active" id="sHome">
+  <p class="home-title">Wybierz temat</p>
+  <p class="home-sub">Kliknij temat, aby rozpocz&#261;&#263; nauk&#281; z fiszkami.</p>
+<div class="topic-card" id="topicCard0" style="margin-top:0"><div class="topic-icon">&#127963;</div><div><div class="topic-name">Polska — symbole i podstawy</div><div class="topic-count">8 pyta&#324;</div></div><div class="topic-arrow">&#8250;</div></div>
+<div class="topic-card" id="topicCard1" style="margin-top:12px"><div class="topic-icon">&#127876;</div><div><div class="topic-name">Polskie święta i tradycje</div><div class="topic-count">12 pyta&#324;</div></div><div class="topic-arrow">&#8250;</div></div>
+<div class="topic-card" id="topicCard2" style="margin-top:12px"><div class="topic-icon">&#128172;</div><div><div class="topic-name">Początek rozmowy</div><div class="topic-count">7 pyta&#324;</div></div><div class="topic-arrow">&#8250;</div></div>
+<div class="topic-card" id="topicCard3" style="margin-top:12px"><div class="topic-icon">&#127760;</div><div><div class="topic-name">Polska i Białoruś</div><div class="topic-count">2 pyta&#324;</div></div><div class="topic-arrow">&#8250;</div></div>
+<div class="topic-card" id="topicCard4" style="margin-top:12px"><div class="topic-icon">&#9962;</div><div><div class="topic-name">Kościóły i religia</div><div class="topic-count">5 pyta&#324;</div></div><div class="topic-arrow">&#8250;</div></div>
+<div class="topic-card" id="topicCard5" style="margin-top:12px"><div class="topic-icon">&#127829;</div><div><div class="topic-name">Polskie jedzenie</div><div class="topic-count">5 pyta&#324;</div></div><div class="topic-arrow">&#8250;</div></div>
+<div class="topic-card" id="topicCard6" style="margin-top:12px"><div class="topic-icon">&#127908;</div><div><div class="topic-name">Polska kultura</div><div class="topic-count">7 pyta&#324;</div></div><div class="topic-arrow">&#8250;</div></div>
+<div class="topic-card" id="topicCard7" style="margin-top:12px"><div class="topic-icon">&#128215;</div><div><div class="topic-name">Historia Polski</div><div class="topic-count">5 pyta&#324;</div></div><div class="topic-arrow">&#8250;</div></div>
+<div class="topic-card" id="topicCard8" style="margin-top:12px"><div class="topic-icon">&#128081;</div><div><div class="topic-name">Królowie i władcy Polski</div><div class="topic-count">7 pyta&#324;</div></div><div class="topic-arrow">&#8250;</div></div>
+<div class="topic-card" id="topicCard9" style="margin-top:12px"><div class="topic-icon">&#127902;</div><div><div class="topic-name">Filmy i dodatkowe pytania</div><div class="topic-count">3 pyta&#324;</div></div><div class="topic-arrow">&#8250;</div></div>
+</div>
+
+<div class="screen" id="sTopic">
+  <div class="topic-header">
+    <h2 id="topicTitle"></h2>
+    <div class="progress-wrap">
+      <div class="progress-bar"><div class="progress-fill" id="pFill"></div></div>
+      <div class="progress-text" id="pText">0 / 0</div>
+    </div>
+  </div>
+  <div class="card-area" id="cardArea">
+    <div class="start-hint"><div class="hint-icon">&#127924;</div><p>Naci&#347;nij przycisk, aby zobaczy&#263; pierwsze pytanie</p></div>
+  </div>
+  <div id="actionArea"><button class="btn" id="actionBtn">Zadaj pytanie</button></div>
+</div>
+
+<script>
+var TOPICS=[
+  {id:0,name:"Polska — symbole i podstawy",icon:"&#127963;",count:8,qa:[{q:"Jakie symbole Polski pan/pani zna?",a:"Znam trzy najważniejsze symbole Polski: godło, flagę i hymn."},{q:"Jak wygląda flaga Polski?",a:"Flaga Polski składa się z dwóch kolorów: białego i czerwonego. Biały kolor jest na górze, a czerwony na dole."},{q:"Jak wygląda godło Polski?",a:"Godło Polski to biały orzeł w koronie na czerwonym tle. Jest to jeden z najważniejszych symboli państwa polskiego."},{q:"Jak nazywa się hymn Polski?",a:"Hymn Polski nazywa się „Mazurek Dąbrowskiego”. Jest to oficjalny hymn państwowy Polski."},{q:"Jaka jest stolica Polski?",a:"Stolicą Polski jest Warszawa. To największe miasto Polski i ważne centrum polityczne, historyczne oraz kulturalne."},{q:"Jakie miasta w Polsce pan/pani zna?",a:"Znam Warszawę, Kraków, Gdańsk, Wrocław i Poznań. To znane i ważne miasta w Polsce."},{q:"Z jakimi krajami graniczy Polska?",a:"Polska graniczy z Niemcami, Czechami, Słowacją, Ukrainą, Białorusią, Litwą i Rosją."},{q:"Jakie morze jest przy Polsce?",a:"Przy Polsce jest Morze Bałtyckie. To ważne morze na północy kraju."}]},
+  {id:1,name:"Polskie święta i tradycje",icon:"&#127876;",count:12,qa:[{q:"Jakie polskie święta pan/pani zna?",a:"Znam Boże Narodzenie, Wielkanoc, Wszystkich Świętych, Święto Niepodległości oraz Święto Konstytucji 3 maja."},{q:"Jakie polskie święta pan/pani obchodzi?",a:"Obchodzę Boże Narodzenie i Wielkanoc. Znam też Święto Niepodległości 11 listopada i wiem, że jest bardzo ważne dla Polski."},{q:"Jak pan/pani obchodzi Boże Narodzenie?",a:"Boże Narodzenie obchodzimy w gronie rodziny. Najważniejsza jest Wigilia, która odbywa się 24 grudnia. Rodzina spotyka się przy stole i składa sobie życzenia."},{q:"Co robicie w Wigilię?",a:"W Wigilię dzielimy się opłatkiem, składamy sobie życzenia i jemy wspólną kolację. Na stole są tradycyjne potrawy wigilijne."},{q:"Ile potraw powinno być na stole wigilijnym?",a:"Tradycyjnie na stole wigilijnym powinno być dwanaście potraw. To stara polska tradycja."},{q:"Jakie potrawy przygotowuje się na Wigilię?",a:"Na Wigilię przygotowuje się barszcz czerwony z uszkami, karpia, śledzia, pierogi, kutię, kompot z suszu i makowiec."},{q:"Jaką zupę z buraków przygotowuje się w Polsce na Wigilię?",a:"Na Wigilię przygotowuje się barszcz czerwony z uszkami. To jedna z najbardziej znanych polskich potraw wigilijnych."},{q:"Jak pan/pani obchodzi Wielkanoc?",a:"Na Wielkanoc święci się koszyk z jedzeniem i je się uroczyste śniadanie wielkanocne w gronie rodziny."},{q:"Co wkłada się do koszyka wielkanocnego?",a:"Do koszyka wkłada się jajka, kiełbasę, chleb, sól, chrzan i czasem babkę wielkanocną."},{q:"Jakie potrawy je się na Wielkanoc?",a:"Na Wielkanoc je się jajka, żurek, białą kiełbasę, szynkę, babkę wielkanocną i mazurek."},{q:"Co to jest Śmigus-Dyngus?",a:"Śmigus-Dyngus to tradycja polewania się wodą w poniedziałek wielkanocny. To znany polski zwyczaj."},{q:"Jak obchodzi się Wszystkich Świętych?",a:"W Dzień Wszystkich Świętych ludzie idą na cmentarz, wspominają bliskich, zapalają znicze i modlą się za zmarłych."}]},
+  {id:2,name:"Początek rozmowy",icon:"&#128172;",count:7,qa:[{q:"Jak się pan/pani nazywa?",a:"Nazywam się..."},{q:"Ile ma pan/pani lat?",a:"Mam ... lat."},{q:"Skąd pan/pani pochodzi?",a:"Pochodzę z Białorusi."},{q:"Gdzie pan/pani mieszka?",a:"Mieszkam na Białorusi. albo: Mieszkam w Polsce."},{q:"Czy jest pan/pani obywatelem Białorusi?",a:"Tak, jestem obywatelem Białorusi. (dla kobiety: Tak, jestem obywatelką Białorusi.)"},{q:"Czy mówi pan/pani po polsku?",a:"Tak, mówię trochę po polsku. Uczę się języka, bo polska kultura i polskie korzenie są dla mnie ważne."},{q:"Czy rozumie pan/pani język polski?",a:"Tak, rozumiem podstawowe pytania po polsku i staram się odpowiadać samodzielnie."}]},
+  {id:3,name:"Polska i Białoruś",icon:"&#127760;",count:2,qa:[{q:"Czy był pan/pani w Polsce?",a:"Tak, byłem/byłam w Polsce. Zwiedzkąem/zwiedzkąam miasta, poznawałem/poznawałam kulturę i widziałem/widziałam, jak wygląda życie w Polsce. (albo: Nie, jeszcze nie byłem/byłam w Polsce, ale bardzo chciałbym/chciałabym pojechać, zobaczyć polskie miasta i lepiej poznać kulturę.)"},{q:"Co pan/pani robił/robiła w Polsce?",a:"Zwiedzkąem/zwiedzkąam miasta, poznawałem/poznawałam polską kulturę i odwiedzałem/odwiedzałam ważne miejsca historyczne."}]},
+  {id:4,name:"Kościóły i religia",icon:"&#9962;",count:5,qa:[{q:"Czy jest pan/pani wierzący/wierząca?",a:"Tak, jestem osobą wierzącą. W mojej rodzinie ważne były tradycje chrześcijańskie i katolickie."},{q:"Czy jest pan katolikiem?",a:"Tak, jestem katolikiem. (dla kobiety: Tak, jestem katoliczką.)"},{q:"Czy na Białorusi są kościóły katolickie?",a:"Tak, na Białorusi jest wiele kościółów katolickich. Znam na przykład kościół świętych Szymona i Heleny w Mińsku, archikatedrę Imienia Najświętszej Maryi Panny w Mińsku oraz kościół Podwyższenia Krzyża Świętego w Brześciu."},{q:"Do jakiego kościóła pan/pani chodził/chodziła?",a:"Chodziłem/chodziłam do kościóła katolickiego. Znam kościół świętych Szymona i Heleny w Mińsku, który jest nazywany Czerwonym Kościołem."},{q:"Jakie kościóły katolickie na Białorusi pan/pani zna?",a:"Znam kościół świętych Szymona i Heleny w Mińsku, archikatedrę Imienia Najświętszej Maryi Panny w Mińsku, kościół Podwyższenia Krzyża Świętego w Brześciu oraz katedrę świętego Franciszka Ksawerego w Grodnie."}]},
+  {id:5,name:"Polskie jedzenie",icon:"&#127829;",count:5,qa:[{q:"Jakie tradycyjne polskie potrawy pan/pani zna?",a:"Znam pierogi, bigos, żurek, barszcz czerwony, schabowego, placki ziemniaczane i gołąbki."},{q:"Co to są pierogi?",a:"Pierogi to tradycyjne polskie danie z ciasta z różnym nadzieniem. Mogą być z ziemniakami, serem, mięsem albo kapustą i grzybami."},{q:"Jakie danie robi się z kapusty i mięsa?",a:"Z kapusty i mięsa robi się bigos. To bardzo znane i stare polskie danie, często przygotowywane na święta."},{q:"Jakie danie robi się z ziemniaków i cebuli?",a:"Z ziemniaków i cebuli robi się placki ziemniaczane. Ziemniaki trzeba zetrzeć, a potem smażyć placki na patelni."},{q:"Co to jest żurek?",a:"Żurek to tradycyjna polska zupa na zakwasie. Często je się go z jajkiem i białą kiełbasą."}]},
+  {id:6,name:"Polska kultura",icon:"&#127908;",count:7,qa:[{q:"Jakich polskich poetów, pisarzy albo muzyków pan/pani zna?",a:"Znam Adama Mickiewicza, Henryka Sienkiewicza, Fryderyka Chopina i Marię Skłodowską-Curie."},{q:"Kto to jest Adam Mickiewicz?",a:"Adam Mickiewicz to jeden z najważniejszych polskich poetów. Napisał „Pana Tadeusza”, bardzo ważne dzieło w literaturze polskiej."},{q:"Kto napisał „Pana Tadeusza”?",a:"„Pana Tadeusza” napisał Adam Mickiewicz. To jedno z najbardziej znanych dzieł literatury polskiej."},{q:"Kto to jest Fryderyk Chopin?",a:"Fryderyk Chopin to polski kompozytor i pianista. Pisał piękną muzykę, między innymi mazurki i polonezy."},{q:"Który polski kompozytor pisał mazurki i polonezy?",a:"Mazurki i polonezy pisał Fryderyk Chopin. Jest jednym z najbardziej znanych polskich kompozytorów na świecie."},{q:"Kim była Maria Skłodowska-Curie?",a:"Maria Skłodowska-Curie była polską naukowczynią. Otrzymała Nagrodę Nobla i jest znana na całym świecie."},{q:"Kto napisał „Quo vadis”?",a:"„Quo vadis” napisał Henryk Sienkiewicz. Był polskim pisarzem i otrzymał Nagrodę Nobla za swoją twórczość."}]},
+  {id:7,name:"Historia Polski",icon:"&#128215;",count:5,qa:[{q:"Kiedy Polska odzyskała niepodległość?",a:"Polska odzyskała niepodległość 11 listopada 1918 roku po 123 latach zaborów."},{q:"Co wydarzyło się 11 listopada 1918 roku?",a:"11 listopada 1918 roku Polska odzyskała niepodległość. Dlatego ten dzień jest obchodzony jako Święto Niepodległości."},{q:"Co się stało 1 września 1939 roku?",a:"1 września 1939 roku Niemcy napadły na Polskę i rozpoczęła się II wojna światowa."},{q:"Co pan/pani wie o Konstytucji 3 maja?",a:"Konstytucja 3 maja została uchwalona w 1791 roku. Była pierwszą konstytucją w Europie i jedną z pierwszych na świecie."},{q:"Kim był Józef Piłsudski?",a:"Józef Piłsudski był ważnym polskim politykiem i wojskowym. Walczył o niepodległość Polski i jest bardzo ważną postacią w historii Polski."}]},
+  {id:8,name:"Królowie i władcy Polski",icon:"&#128081;",count:7,qa:[{q:"Jakich królów Polski pan/pani zna?",a:"Znam Bolesława Chrobrego, Kazimierza Wielkiego, Jana III Sobieskiego i Stanisława Augusta Poniatowskiego."},{q:"Kim był Mieszko I?",a:"Mieszko I był pierwszym historycznym władcą Polski. Przyjął chrzest w 966 roku, co było bardzo ważnym wydarzeniem dla Polski."},{q:"Kim był Bolesław Chrobry?",a:"Bolesław Chrobry był pierwszym królem Polski. Został koronowany w 1025 roku."},{q:"Kim był Kazimierz Wielki?",a:"Kazimierz Wielki był królem Polski, który wzmocnił państwo, rozwijał miasta i budował zamki."},{q:"Kim był Jan III Sobieski?",a:"Jan III Sobieski był królem Polski, który pokonał Turków pod Wiedniem w 1683 roku."},{q:"Który król Polski wygrał bitwę pod Wiedniem?",a:"Bitwę pod Wiedniem wygrał Jan III Sobieski. Stało się to w 1683 roku."},{q:"Kto był ostatnim królem Polski?",a:"Ostatnim królem Polski był Stanisław August Poniatowski. Panował przed rozbiorami Polski."}]},
+  {id:9,name:"Filmy i dodatkowe pytania",icon:"&#127902;",count:3,qa:[{q:"Jak nazywa się polski film o Krzyżakach?",a:"Film nazywa się „Krzyżacy”. Opowiada o konflikcie Polski z zakonem krzyżackim."},{q:"Jak nazywa się film o Kozakach wyreżyserowany przez Jerzego Hoffmana?",a:"Ten film nazywa się „Ogniem i mieczem”. Opowiada o historii Polski i Kozaków."},{q:"Co oznacza dla pana/pani Polska?",a:"Polska oznacza dla mnie kraj moich przodków, polską kulturę, tradycję i historię. Dlatego chcę lepiej poznać język i zachować więź z Polską."}]},
+];
+var QA=[], currentTopicIdx=0;
+var remaining=[],shown=0,finished=false;
+document.getElementById('topicCard0').addEventListener('click',function(){openTopic(0);});
+document.getElementById('topicCard1').addEventListener('click',function(){openTopic(1);});
+document.getElementById('topicCard2').addEventListener('click',function(){openTopic(2);});
+document.getElementById('topicCard3').addEventListener('click',function(){openTopic(3);});
+document.getElementById('topicCard4').addEventListener('click',function(){openTopic(4);});
+document.getElementById('topicCard5').addEventListener('click',function(){openTopic(5);});
+document.getElementById('topicCard6').addEventListener('click',function(){openTopic(6);});
+document.getElementById('topicCard7').addEventListener('click',function(){openTopic(7);});
+document.getElementById('topicCard8').addEventListener('click',function(){openTopic(8);});
+document.getElementById('topicCard9').addEventListener('click',function(){openTopic(9);});
+document.getElementById('backBtn').addEventListener('click',goHome);
+document.getElementById('actionBtn').addEventListener('click',showCard);
+function openTopic(idx){currentTopicIdx=idx;QA=TOPICS[idx].qa;document.getElementById('topicTitle').textContent=TOPICS[idx].name;document.getElementById('sHome').classList.remove('active');document.getElementById('sTopic').classList.add('active');document.getElementById('backBtn').classList.add('vis');resetTopic();}
+function goHome(){document.getElementById('sTopic').classList.remove('active');document.getElementById('sHome').classList.add('active');document.getElementById('backBtn').classList.remove('vis');}
+function resetTopic(){remaining=shuffle(Array.from({length:QA.length},function(_,i){return i;}));shown=0;finished=false;updateProgress();document.getElementById('cardArea').innerHTML='<div class="start-hint"><div class="hint-icon">&#127924;</div><p>Naci&#347;nij przycisk, aby zobaczy&#263; pierwsze pytanie</p></div>';document.getElementById('actionArea').innerHTML='<button class="btn" onclick="showCard()">Zadaj pytanie</button>';}
+function showCard(){if(remaining.length===0){showFinished();return;}var idx=remaining.pop();var item=QA[idx];shown++;updateProgress();document.getElementById('cardArea').innerHTML='<div class="flip-card" id="fc" onclick="flipCard()"><div class="flip-inner"><div class="flip-front"><div class="card-label">Pytanie</div><div class="card-text">'+item.q+'</div><div class="tap-hint">Kliknij, aby zobaczyć odpowiedź</div></div><div class="flip-back"><div class="card-label">Odpowiedź</div><div class="card-text">'+item.a+'</div></div></div></div>';document.getElementById('actionArea').innerHTML='<button class="btn" id="nextBtn" onclick="showCard()" style="display:none">'+(remaining.length===0?'Zobacz wyniki':'Następne pytanie →')+'</button>';}
+function flipCard(){var fc=document.getElementById('fc');if(!fc)return;fc.classList.toggle('flipped');if(fc.classList.contains('flipped')){var nb=document.getElementById('nextBtn');if(nb){nb.style.display='block';nb.textContent=remaining.length===0?'Zobacz wyniki':'Następne pytanie →';}}}
+function showFinished(){finished=true;document.getElementById('cardArea').innerHTML='<div class="finished"><div class="fi">&#127881;</div><h3>Świeta! Wszystkie pytania zaliczone!</h3><p>Przerobiałeś/aś wszystkie '+QA.length+' fiszki z tego tematu.</p></div>';document.getElementById('actionArea').innerHTML='<button class="btn" onclick="resetTopic()">Zacznij od nowa</button>';}
+function updateProgress(){document.getElementById('pFill').style.width=(shown/QA.length*100)+'%';document.getElementById('pText').textContent=shown+' / '+QA.length;}
+function shuffle(a){var b=a.slice();for(var i=b.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=b[i];b[i]=b[j];b[j]=t;}return b;}
+</script>
+</body>
+</html>
